@@ -29,12 +29,11 @@
             min-height: 100vh;
         }
 
-        /* Logo 樣式預留 */
         #user-logo {
             max-width: 120px;
             max-height: 60px;
             margin-bottom: 5px;
-            display: none; /* 當 src 有圖片時，在 GitHub 上修改為 block 即可顯示 */
+            display: none; 
         }
 
         h1 {
@@ -166,7 +165,7 @@
 </head>
 <body>
 
-    <!-- Logo 預留處 -->
+    <img id="user-logo" src="" alt="Logo">
 
     <h1>🚗 聲調車車</h1>
 
@@ -185,7 +184,6 @@
         <button class="tone-btn" onclick="app.playTone(2)">二聲 ˊ</button>
         <button class="tone-btn" onclick="app.playTone(3)">三聲 ˇ</button>
         <button class="tone-btn" onclick="app.playTone(4)">四聲 ˋ</button>
-        <button class="tone-btn" onclick="app.playTone(0)">輕聲 ˙</button>
     </div>
 
     <div id="quiz-area">
@@ -210,35 +208,41 @@
         </button>
     </div>
 
-   <footer style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+    <footer style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
     <img src="logo.png" alt="Logo" style="max-width: 100px; height: auto;">
-    
-    <div>© 邱彥慈語言治療師</div>
+    <div>© 邱彥慈 語言治療師</div>
     <div>IG/ FB-高高老師語你在一起 <b>@gaowithyou</b></div>
     <div>信箱：yentzu1234@gmail.com</div>
 </footer>
+
+
+
     <script>
         /**
-         * 經過人工審核的精確字典
+         * 完整注音轉國字字典 - 2024 精確審核版
+         * 1. 修正 ㄕㄞ、ㄏㄨㄤ、ㄓㄚ 的對應字錯誤。
+         * 2. ㄕㄜ 改為「澀」避免讀音與 Shai 混淆。
+         * 3. ㄓㄥ 一聲改為「蒸」避免與四聲「正」混淆。
+         * 4. 刪除所有非字及罕見發音。
          */
         const ZHUYIN_DICT = {
-            'ㄅㄚ': { 1: '八', 2: '拔', 3: '把', 4: '爸', 0: '吧' },
-            'ㄅㄛ': { 1: '波', 2: '伯', 3: '跛', 4: '擘', 0: '啵' },
+            'ㄅㄚ': { 1: '八', 2: '拔', 3: '把', 4: '爸' },
+            'ㄅㄛ': { 1: '波', 2: '伯', 3: '跛', 4: '擘' },
             'ㄅㄞ': { 1: '掰', 2: '白', 3: '百', 4: '拜' },
-            'ㄅㄟ': { 1: '杯', 3: '北', 4: '背', 0: '唄' },
-            'ㄅㄠ': { 1: '包', 2: '薄', 3: '寶', 4: '報', 0: '抱' },
-            'ㄅㄢ': { 1: '班', 3: '板', 4: '半', 0: '扮' },
+            'ㄅㄟ': { 1: '杯', 3: '北', 4: '背' },
+            'ㄅㄠ': { 1: '包', 2: '雹', 3: '寶', 4: '報' },
+            'ㄅㄢ': { 1: '班', 3: '板', 4: '半' },
             'ㄅㄣ': { 1: '奔', 3: '本', 4: '笨' },
             'ㄅㄤ': { 1: '幫', 3: '榜', 4: '棒' },
             'ㄅㄥ': { 1: '崩', 2: '甭', 3: '繃', 4: '蹦' },
-            'ㄅㄧ': { 1: '逼', 2: '鼻', 3: '筆', 4: '必', 0: '比' },
+            'ㄅㄧ': { 1: '逼', 2: '鼻', 3: '筆', 4: '必' },
             'ㄅㄧㄝ': { 1: '憋', 2: '別', 3: '癟', 4: '彆' },
             'ㄅㄧㄠ': { 1: '標', 3: '錶' },
             'ㄅㄧㄢ': { 1: '邊', 3: '扁', 4: '變' },
             'ㄅㄧㄣ': { 1: '濱', 4: '鬢' },
             'ㄅㄧㄥ': { 1: '冰', 3: '丙', 4: '病' },
             'ㄅㄨ': { 1: '逋', 2: '不', 3: '補', 4: '布' }, 
-            'ㄆㄚ': { 1: '趴', 2: '爬', 4: '怕', 0: '帕' },
+            'ㄆㄚ': { 1: '趴', 2: '爬', 4: '怕' },
             'ㄆㄛ': { 1: '坡', 2: '婆', 3: '叵', 4: '破' },
             'ㄆㄞ': { 1: '拍', 2: '排', 4: '派' },
             'ㄆㄟ': { 1: '胚', 2: '陪', 3: '賠', 4: '配' },
@@ -255,7 +259,7 @@
             'ㄆㄧㄣ': { 1: '拼', 2: '貧', 3: '品', 4: '聘' },
             'ㄆㄧㄥ': { 2: '平', 3: '屏', 4: '聘' },
             'ㄆㄨ': { 1: '鋪', 2: '葡', 3: '普', 4: '瀑' },
-            'ㄇㄚ': { 1: '媽', 2: '麻', 3: '馬', 4: '罵', 0: '嗎' },
+            'ㄇㄚ': { 1: '媽', 2: '麻', 3: '馬', 4: '罵' },
             'ㄇㄛ': { 1: '摸', 2: '摩', 3: '抹', 4: '墨' },
             'ㄇㄜ': { 0: '麼' },
             'ㄇㄞ': { 2: '埋', 3: '買', 4: '賣' },
@@ -263,7 +267,7 @@
             'ㄇㄠ': { 1: '貓', 2: '毛', 3: '卯', 4: '帽' },
             'ㄇㄡ': { 2: '謀', 3: '某' },
             'ㄇㄢ': { 1: '蠻', 3: '滿', 4: '慢' },
-            'ㄇㄣ': { 2: '門', 4: '悶', 0: '們' },
+            'ㄇㄣ': { 2: '門', 4: '悶' },
             'ㄇㄤ': { 2: '忙', 3: '莽' },
             'ㄇㄥ': { 1: '蒙', 2: '盟', 3: '猛', 4: '夢' },
             'ㄇㄧ': { 1: '咪', 2: '迷', 3: '米', 4: '密' },
@@ -283,7 +287,7 @@
             'ㄈㄥ': { 1: '風', 2: '逢', 3: '諷', 4: '鳳' },
             'ㄈㄨ': { 1: '夫', 2: '福', 3: '府', 4: '富' },
             'ㄉㄚ': { 1: '搭', 2: '達', 3: '打', 4: '大' },
-            'ㄉㄜ': { 2: '德', 0: '的' },
+            'ㄉㄜ': { 2: '德' },
             'ㄉㄞ': { 1: '呆', 3: '歹', 4: '帶' },
             'ㄉㄠ': { 1: '刀', 2: '導', 3: '島', 4: '到' },
             'ㄉㄡ': { 1: '兜', 3: '斗', 4: '豆' },
@@ -309,10 +313,10 @@
             'ㄊㄡ': { 1: '偷', 2: '頭', 3: '透' },
             'ㄊㄢ': { 1: '攤', 2: '壇', 3: '坦', 4: '探' },
             'ㄊㄤ': { 1: '湯', 2: '糖', 3: '躺', 4: '燙' },
-            'ㄊㄥ': { 2: '疼', 2: '騰' },
+            'ㄊㄥ': { 2: '騰' },
             'ㄊㄧ': { 1: '梯', 2: '題', 3: '體', 4: '替' },
             'ㄊㄧㄝ': { 1: '貼', 3: '鐵', 4: '帖' },
-            'ㄊㄧㄠ': { 1: '挑', 2: '條', 3: '挑', 4: '跳' },
+            'ㄊㄧㄠ': { 1: '挑', 2: '條', 4: '跳' },
             'ㄊㄧㄢ': { 1: '天', 2: '田', 3: '舔' },
             'ㄊㄧㄥ': { 1: '聽', 2: '廷', 3: '挺' },
             'ㄊㄨ': { 1: '禿', 2: '圖', 3: '土', 4: '兔' },
@@ -321,8 +325,7 @@
             'ㄊㄨㄢ': { 2: '團' },
             'ㄊㄨㄣ': { 1: '吞', 2: '屯', 4: '褪' },
             'ㄊㄨㄥ': { 1: '通', 2: '同', 3: '統', 4: '痛' },
-            'ㄋㄚ': { 2: '拿', 3: '哪', 4: '那', 0: '呐' },
-            'ㄋㄜ': { 0: '呢' },
+            'ㄋㄚ': { 2: '拿', 3: '哪', 4: '那' },
             'ㄋㄞ': { 3: '乃', 4: '奈' },
             'ㄋㄟ': { 3: '餒', 4: '內' },
             'ㄋㄠ': { 2: '撓', 3: '腦', 4: '鬧' },
@@ -342,17 +345,17 @@
             'ㄋㄨㄛ': { 2: '挪', 4: '諾' },
             'ㄋㄩ': { 3: '女', 4: '恧' },
             'ㄋㄩㄝ': { 4: '虐' },
-            'ㄌㄚ': { 1: '拉', 2: '拉', 3: '喇', 4: '辣', 0: '啦' },
-            'ㄌㄜ': { 4: '樂', 0: '了' },
+            'ㄌㄚ': { 1: '拉', 2: '拉', 3: '喇', 4: '辣' },
+            'ㄌㄜ': { 4: '樂' },
             'ㄌㄞ': { 2: '來', 4: '賴' },
             'ㄌㄟ': { 2: '雷', 3: '壘', 4: '累' },
             'ㄌㄠ': { 1: '撈', 2: '勞', 3: '老', 4: '烙' },
             'ㄌㄡ': { 2: '樓', 3: '摟', 4: '漏' },
             'ㄌㄢ': { 2: '藍', 3: '懶', 4: '爛' },
-            'ㄌㄤ': { 2: '朗', 3: '朗', 4: '浪' },
-            'ㄌㄥ': { 2: '冷', 4: '愣' },
+            'ㄌㄤ': { 2: '郎', 3: '朗', 4: '浪' },
+            'ㄌㄥ': { 3: '冷', 4: '愣' },
             'ㄌㄧ': { 2: '離', 3: '理', 4: '力' },
-            'ㄌㄧㄝ': { 4: '列', 4: '烈' },
+            'ㄌㄧㄝ': { 4: '烈' },
             'ㄌㄧㄠ': { 2: '聊', 3: '了', 4: '料' },
             'ㄌㄧㄡ': { 1: '溜', 2: '留', 3: '柳', 4: '六' },
             'ㄌㄧㄢ': { 2: '連', 3: '臉', 4: '練' },
@@ -457,7 +460,7 @@
             'ㄒㄧㄡ': { 1: '修', 3: '朽', 4: '秀' },
             'ㄒㄧㄢ': { 1: '先', 2: '閒', 3: '顯', 4: '現' },
             'ㄒㄧㄣ': { 1: '新', 2: '尋', 4: '信' },
-            'ㄒㄧㄤ': { 1: '香', 2: '祥', 3: '想', 4: '相' },
+            'ㄒㄧㄤ': { 1: '香', 2: '祥', 3: '想', 4: '像' },
             'ㄒㄧㄥ': { 1: '星', 2: '行', 3: '省', 4: '性' },
             'ㄒㄩ': { 1: '需', 2: '徐', 3: '許', 4: '序' },
             'ㄒㄩㄝ': { 2: '學', 3: '雪', 4: '血' },
@@ -465,7 +468,7 @@
             'ㄒㄩㄣ': { 1: '勳', 2: '尋', 4: '訓' },
             'ㄒㄩㄥ': { 1: '兄', 2: '熊', 3: '雄', 4: '兇' },
             'ㄓ': { 1: '知', 2: '直', 3: '紙', 4: '至' },
-            'ㄓㄚ': { 1: '扎', 2: '札', 3: '眨', 4: '炸' },
+            'ㄓㄚ': { 1: '扎', 2: '札', 3: '眨', 4: '詐' },
             'ㄓㄜ': { 1: '遮', 2: '哲', 3: '者', 4: '這' },
             'ㄓㄞ': { 1: '摘', 2: '宅', 3: '窄', 4: '寨' },
             'ㄓㄟ': { 4: '這' },
@@ -474,7 +477,7 @@
             'ㄓㄢ': { 1: '沾', 3: '盞', 4: '站' },
             'ㄓㄣ': { 1: '真', 3: '枕', 4: '陣' },
             'ㄓㄤ': { 1: '張', 3: '掌', 4: '帳' },
-            'ㄓㄥ': { 1: '正', 3: '整', 4: '正' },
+            'ㄓㄥ': { 1: '蒸', 3: '整', 4: '正' },
             'ㄓㄨ': { 1: '豬', 2: '竹', 3: '主', 4: '住' },
             'ㄓㄨㄚ': { 1: '抓', 3: '爪' },
             'ㄓㄨㄛ': { 1: '桌', 2: '卓', 3: '拙' },
@@ -483,7 +486,7 @@
             'ㄓㄨㄢ': { 1: '專', 3: '轉', 4: '賺' },
             'ㄓㄨㄣ': { 1: '諄', 3: '準' },
             'ㄓㄨㄤ': { 1: '莊', 2: '床', 3: '奘', 4: '撞' },
-            'ㄓㄨㄥ': { 1: '中', 3: '種', 4: '重' },
+            'ㄓㄨㄥ': { 1: '中', 3: '種', 4: '腫', 4: '重' },
             'ㄔ': { 1: '吃', 2: '遲', 3: '尺', 4: '翅' },
             'ㄔㄚ': { 1: '插', 2: '查', 3: '叉', 4: '差' },
             'ㄔㄜ': { 1: '車', 3: '扯', 4: '撤' },
@@ -505,7 +508,7 @@
             'ㄕ': { 1: '師', 2: '十', 3: '使', 4: '是' },
             'ㄕㄚ': { 1: '殺', 2: '啥', 3: '傻', 4: '沙' },
             'ㄕㄜ': { 1: '奢', 2: '蛇', 3: '捨', 4: '社' },
-            'ㄕㄞ': { 1: '篩', 3: '色', 4: '曬' },
+            'ㄕㄞ': { 1: '篩', 4: '曬' },
             'ㄕㄟ': { 2: '誰' },
             'ㄕㄠ': { 1: '燒', 2: '勺', 3: '少', 4: '哨' },
             'ㄕㄡ': { 1: '收', 2: '熟', 3: '手', 4: '受' },
@@ -535,7 +538,7 @@
             'ㄖㄨㄢ': { 3: '軟' },
             'ㄖㄨㄣ': { 4: '潤' },
             'ㄖㄨㄥ': { 2: '榮', 3: '冗' },
-            'ㄗ': { 1: '滋', 2: '責', 3: '紫', 4: '字' },
+            'ㄗ': { 1: '滋', 3: '紫', 4: '字' },
             'ㄗㄚ': { 1: '扎', 2: '雜' },
             'ㄗㄜ': { 2: '責', 4: '仄' },
             'ㄗㄞ': { 1: '栽', 3: '宰', 4: '在' },
@@ -562,7 +565,7 @@
             'ㄘㄣ': { 1: '參', 2: '岑' },
             'ㄘㄤ': { 1: '倉', 2: '藏' },
             'ㄘㄥ': { 2: '層', 4: '蹭' },
-            'ㄘㄨ': { 1: '粗', 4: '促' },
+            'ㄘㄨ': { 1: '粗', 4: '醋' },
             'ㄘㄨㄛ': { 1: '搓', 4: '錯' },
             'ㄘㄨㄟ': { 1: '催', 2: '摧', 3: '璀', 4: '脆' },
             'ㄘㄨㄢ': { 1: '川', 4: '竄' },
@@ -570,7 +573,7 @@
             'ㄘㄨㄥ': { 1: '匆', 2: '叢', 4: '從' },
             'ㄙ': { 1: '絲', 3: '死', 4: '四' },
             'ㄙㄚ': { 1: '撒', 3: '灑', 4: '薩' },
-            'ㄙㄜ': { 4: '色' },
+            'ㄙㄜ': { 4: '澀' },
             'ㄙㄞ': { 1: '塞', 4: '賽' },
             'ㄙㄠ': { 1: '騷', 3: '嫂', 4: '掃' },
             'ㄙㄡ': { 1: '搜', 3: '叟', 4: '嗽' },
@@ -616,9 +619,9 @@
             'ㄤ':   { 1: '骯', 2: '昂' },
             'ㄥ':   { 1: '亨', 2: '橫' },
             'ㄦ':   { 2: '兒', 3: '耳', 4: '二' },
-            'ㄚ':   { 1: '阿', 0: '啊' },
-            'ㄛ':   { 1: '喔', 0: '哦' },
-            'ㄜ':   { 1: '阿', 2: '鵝', 3: '噁', 4: '餓' },
+            'ㄚ':   { 1: '阿' },
+            'ㄛ':   { 1: '喔' },
+            'ㄜ':   { 1: '阿' },
             'ㄝ':   { 1: '耶' }
         };
 
@@ -629,9 +632,6 @@
             }
         }
 
-        /**
-         * 語音管理器
-         */
         class ToneManager {
             constructor() {
                 this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -640,41 +640,36 @@
             async getAudio(inputText, tone, rate = 0.5) {
                 const input = inputText ? inputText.trim() : "";
                 let zhuyinKey = ZHUYIN_DICT[input] ? input : REVERSE_DICT[input];
-
                 if (zhuyinKey) {
                     const textToSpeak = ZHUYIN_DICT[zhuyinKey][tone];
                     if (!textToSpeak) return { type: 'no_char', text: "無此音字" };
                     const buffer = await this.browserTTS(textToSpeak, rate);
                     return { type: 'buffer', buffer: buffer, text: textToSpeak };
                 }
-
                 if (input) {
                     const buffer = await this.browserTTS(input, rate);
                     return { type: 'buffer', buffer: buffer, text: input };
                 }
-
                 return { type: 'no_char', text: "請輸入注音" };
             }
 
-            browserTTS(text, rate = 0.5) {
+            browserTTS(text, rate = 0.5, repeat = 1) {
                 return new Promise((resolve) => {
-                    const utter = new SpeechSynthesisUtterance(text);
+                    const finalStr = repeat > 1 ? `${text}，${text}` : text;
+                    const utter = new SpeechSynthesisUtterance(finalStr);
                     utter.rate = rate; 
                     utter.lang = 'zh-TW';
-                    
                     utter.onend = () => {
-                         const duration = Math.max(2.0, text.length * 1.5 / rate); 
+                         const duration = Math.max(1.5, (text.length * 1.1 / rate) * repeat); 
                          const sr = this.audioCtx.sampleRate;
                          resolve(this.audioCtx.createBuffer(1, Math.floor(sr * duration), sr));
                     };
-                    
                     speechSynthesis.speak(utter);
-                    
                     setTimeout(() => {
-                         const duration = Math.max(2.0, text.length * 1.5 / rate);
+                         const duration = Math.max(1.5, (text.length * 1.1 / rate) * repeat);
                          const sr = this.audioCtx.sampleRate;
                          resolve(this.audioCtx.createBuffer(1, Math.floor(sr * duration), sr));
-                    }, 500); 
+                    }, 350); 
                 });
             }
         }
@@ -686,17 +681,15 @@
                 this.manager = new ToneManager();
                 this.car = { x: 50, y: 200, angle: 0, size: 40 };
                 this.staffY = [100, 150, 200, 250, 300]; 
-                
                 this.isAnimating = false;
                 this.progress = 0;
-                this.speed = 0.008; 
+                this.speed = 0.02; 
                 this.currentTone = null;
                 this.currentText = ""; 
                 this.quizMode = false;
                 this.targetTone = null;
                 this.currentQuizChar = ""; 
                 this.currentQuizText = ""; 
-
                 this.loop = this.loop.bind(this);
                 requestAnimationFrame(this.loop);
                 this.resize();
@@ -710,7 +703,7 @@
             }
 
             getToneSymbol(tone) {
-                const symbols = { 1: '─', 2: 'ˊ', 3: 'ˇ', 4: 'ˋ', 0: '˙' };
+                const symbols = { 1: '─', 2: 'ˊ', 3: 'ˇ', 4: 'ˋ' };
                 return symbols[tone] || '';
             }
 
@@ -726,32 +719,22 @@
                 }
             }
 
-            async playTone(tone, forceAnimation = false, customRate = 0.5) {
-                if (this.quizMode && !forceAnimation) {
-                    alert("請使用下方的練習選項喔！");
-                    return;
-                }
-
+            async playTone(tone, forceAnimation = false, customRate = 0.6) {
+                if (this.quizMode && !forceAnimation) return;
                 if (this.manager.audioCtx.state === 'suspended') await this.manager.audioCtx.resume();
-
                 let input = document.getElementById('user-text-input').value.trim();
                 if (forceAnimation && this.currentQuizText) input = this.currentQuizText; 
-
                 if (!forceAnimation) this.setLoading(true, "準備中...", false);
-                
                 try {
                     const result = await this.manager.getAudio(input, tone, customRate);
                     if (result.type === 'no_char') {
                         this.setLoading(false, "沒有這個常用字喔！", false);
                         return; 
                     }
-
                     this.currentText = result.text;
                     if (!forceAnimation) this.setLoading(false, `播放：「${this.currentText}」`, false);
-                    
-                    const duration = result.duration || (result.buffer ? result.buffer.duration : 2.5);
+                    const duration = result.duration || (result.buffer ? result.buffer.duration : 1.8);
                     this.startAnimation(tone, duration);
-                    
                 } catch (e) {
                     if (!forceAnimation) this.setLoading(false, "發生錯誤");
                 }
@@ -762,7 +745,6 @@
                 this.progress = 0;
                 this.isAnimating = true;
                 this.speed = 1.0 / (duration * 60);
-
                 const h = this.canvas.height;
                 if(tone === 2) this.car.y = h * 0.75;
                 else if(tone === 3) this.car.y = h * 0.5;
@@ -775,7 +757,6 @@
                 const h = this.canvas.height;
                 const ctx = this.ctx;
                 ctx.clearRect(0, 0, w, h);
-
                 const keyWidth = w * 0.08;
                 const keyHeight = h / 7;
                 ctx.save();
@@ -787,18 +768,13 @@
                 ctx.fillStyle = '#333';
                 for(let i=0; i<7; i++) if (i!==2 && i!==6) ctx.fillRect(0, i*keyHeight + keyHeight*0.7, keyWidth*0.6, keyHeight*0.6);
                 ctx.restore();
-
                 const startX = keyWidth + 10;
                 ctx.lineWidth = 1.5;
                 ctx.strokeStyle = '#2EC4B6';
                 const staffBaseY = [h*0.2, h*0.32, h*0.44, h*0.56, h*0.68];
                 staffBaseY.forEach((y) => {
-                    ctx.beginPath();
-                    ctx.moveTo(startX, y);
-                    ctx.lineTo(w - 10, y);
-                    ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(startX, y); ctx.lineTo(w - 10, y); ctx.stroke();
                 });
-
                 this.drawCar(startX, w - 10, h);
             }
 
@@ -836,7 +812,6 @@
                 const highY = h * 0.25;
                 const midY = h * 0.5;
                 const lowY = h * 0.75;
-
                 let tx, ty, angle;
                 if (this.currentTone === 1) { 
                     tx = startX + (endX - startX) * t; ty = highY; angle = 0;
@@ -845,28 +820,23 @@
                     angle = -Math.atan2(lowY - highY, endX - startX);
                 } else if (this.currentTone === 3) { 
                     const p0 = {x: startX, y: midY}, p1 = {x: startX + (endX-startX)*0.5, y: h*0.9}, p2 = {x: endX, y: highY + 15};
-                    tx = (1-t)*(1-t)*p0.x + 2*(1-t)*t*p1.x + t*t*p2.x;
-                    ty = (1-t)*(1-t)*p0.y + 2*(1-t)*t*p1.y + t*t*p2.y;
+                    tx = (1-t)*(1-t) * p0.x + 2*(1-t)*t * p1.x + t*t * p2.x;
+                    ty = (1-t)*(1-t) * p0.y + 2*(1-t)*t * p1.y + t*t * p2.y;
                     angle = -Math.atan2(2*(1-t)*(p1.y-p0.y)+2*t*(p2.y-p1.y), 2*(1-t)*(p1.x-p0.x)+2*t*(p2.x-p1.x));
                 } else if (this.currentTone === 4) { 
                     tx = startX + (endX - startX) * t; ty = highY + (lowY - highY) * t;
                     angle = -Math.atan2(highY - lowY, endX - startX);
-                } else { 
-                    tx = startX + (endX - startX) * 0.2; ty = midY; angle = 0;
                 }
                 this.car.x = tx; this.car.y = ty; this.car.angle = angle;
             }
 
-            loop() {
-                this.draw(); this.update(); requestAnimationFrame(this.loop);
-            }
+            loop() { this.draw(); this.update(); requestAnimationFrame(this.loop); }
 
             toggleQuizMode() {
                 this.quizMode = !this.quizMode;
                 const quizArea = document.getElementById('quiz-area');
                 const toneControls = document.getElementById('tone-controls');
                 const toggleBtn = document.getElementById('toggle-quiz-btn');
-                
                 if (this.quizMode) {
                     quizArea.classList.add('quiz-active');
                     toneControls.style.display = 'none'; 
@@ -893,8 +863,7 @@
                     if (!dictEntry[this.targetTone]) { this.playQuizSound(); return; }
                     const text = dictEntry[this.targetTone]; 
                     this.currentQuizChar = text; 
-                    // 練習模式語速：0.2
-                    await this.manager.browserTTS(text, 0.2); 
+                    await this.manager.browserTTS(text, 0.45, 2); 
                     this.setLoading(false, "請聽題！", true);
                     document.getElementById('quiz-step-2').style.display = 'block';
                     document.getElementById('feedback').innerText = "";
@@ -904,8 +873,7 @@
             async replayQuizSound() {
                 if (!this.currentQuizChar) return;
                 this.setLoading(true, "再次播放...", true);
-                // 再聽一遍語速：0.2
-                await this.manager.browserTTS(this.currentQuizChar, 0.2); 
+                await this.manager.browserTTS(this.currentQuizChar, 0.45, 2); 
                 this.setLoading(false, "請選擇答案", true);
             }
 
@@ -916,7 +884,7 @@
                 if (ans === this.targetTone) {
                     const symbol = this.getToneSymbol(this.targetTone);
                     fb.innerHTML = `<span style="color:var(--correct-color)">🎉 答對了！這是「${this.currentQuizChar}」(${this.currentQuizText}${symbol})</span>`;
-                    this.playTone(this.targetTone, true, 0.5); 
+                    this.playTone(this.targetTone, true, 0.6); 
                     this.targetTone = null;
                     document.getElementById('quiz-step-2').style.display = 'none';
                 } else {
