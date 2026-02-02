@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>聲調車車</title>
+    <!-- 瀏覽器分頁與加到主畫面的圖示 (已改為車車圖案) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
-    <!-- Apple 手機「加到主畫面」的專用圖示 -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23FF9F1C%22 rx=%2220%22/><text y=%22.75em%22 x=%225%22 font-size=%2280%22>🚗</text></svg>">
-    <!-- ⬆️ ⬆️ ⬆️ 改這裡 ⬆️ ⬆️ ⬆️ -->
 
     <style>
         :root {
@@ -149,6 +148,24 @@
             min-width: 70px;
         }
 
+        /* 答對重播按鈕樣式 */
+        .replay-success-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-left: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            vertical-align: middle;
+            font-weight: bold;
+        }
+
         footer {
             margin-top: auto;
             padding: 20px 10px 10px 10px;
@@ -157,20 +174,14 @@
             color: var(--footer-color);
             line-height: 1.6;
             width: 100%;
-        }
-
-        .shake { animation: shake 0.4s; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            50% { transform: translateX(8px); }
-            75% { transform: translateX(-8px); }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
-
-    <img id="user-logo" src="" alt="Logo">
 
     <h1>🚗 聲調車車</h1>
 
@@ -213,24 +224,19 @@
         </button>
     </div>
 
-    <footer style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-    <img src="logo.png" alt="Logo" style="max-width: 100px; height: auto;">
-    <div>© 邱彥慈 語言治療師</div>
-    <div>IG/ FB-高高老師語你在一起 <b>@gaowithyou</b></div>
-    <div>信箱：yentzu1234@gmail.com</div>
-</footer>
-
-
+    <footer>
+        <!-- ⬇️ 這裡會顯示你的 Logo 圖片 ⬇️ -->
+        <img src="logo.png" alt="Logo" onerror="this.style.display='none'" style="max-width: 100px; height: auto;">
+        <div>© 邱彥慈 語言治療師</div>
+        <div>IG/ FB-高高老師語你在一起 <b>@gaowithyou</b></div>
+        <div>信箱：yentzu1234@gmail.com</div>
+    </footer>
 
     <script>
         /**
-         * 完整注音轉國字字典 - 2024 精確審核版
-         * 1. 修正 ㄕㄞ、ㄏㄨㄤ、ㄓㄚ 的對應字錯誤。
-         * 2. ㄕㄜ 改為「澀」避免讀音與 Shai 混淆。
-         * 3. ㄓㄥ 一聲改為「蒸」避免與四聲「正」混淆。
-         * 4. 刪除所有非字及罕見發音。
+         * 完整注音轉國字字典 - 2024 精確審核最終版
          */
-       const ZHUYIN_DICT = {
+        const ZHUYIN_DICT = {
             'ㄅㄚ': { 1: '八', 2: '拔', 3: '把', 4: '爸' },
             'ㄅㄛ': { 1: '波', 2: '伯', 3: '跛', 4: '播' },
             'ㄅㄞ': { 1: '掰', 2: '白', 3: '百', 4: '拜' },
@@ -244,7 +250,7 @@
             'ㄅㄧㄝ': { 1: '憋', 2: '別', 3: '癟', 4: '彆' },
             'ㄅㄧㄠ': { 1: '標', 3: '錶' },
             'ㄅㄧㄢ': { 1: '邊', 3: '扁', 4: '變' },
-            'ㄅㄧㄣ': { 1: '濱', 4: '鬢' },
+            'ㄅㄧㄣ': { 1: '濱', 4: '殯' },
             'ㄅㄧㄥ': { 1: '冰', 3: '丙', 4: '病' },
             'ㄅㄨ': { 1: '逋', 2: '不', 3: '補', 4: '布' }, 
             'ㄆㄚ': { 1: '趴', 2: '爬', 4: '怕' },
@@ -282,7 +288,7 @@
             'ㄇㄧㄣ': { 2: '民', 3: '敏' },
             'ㄇㄧㄥ': { 2: '明', 3: '酩', 4: '命' },
             'ㄇㄨ': { 2: '模', 3: '母', 4: '木' },
-            'ㄈㄚ': { 1: '發', 2: '罰', 3: '法', 4: '琺' }, 
+            'ㄈㄚ': { 1: '發', 2: '罰', 3: '法', 4: '琺' },
             'ㄈㄛ': { 2: '佛' },
             'ㄈㄟ': { 1: '飛', 2: '肥', 3: '匪', 4: '費' },
             'ㄈㄡ': { 3: '否' },
@@ -294,7 +300,7 @@
             'ㄉㄚ': { 1: '搭', 2: '達', 3: '打', 4: '大' },
             'ㄉㄜ': { 2: '德' },
             'ㄉㄞ': { 1: '呆', 3: '歹', 4: '帶' },
-            'ㄉㄠ': { 1: '刀', 2: '捯', 3: '島', 4: '到' }, 
+            'ㄉㄠ': { 1: '刀', 2: '捯', 3: '島', 4: '到' },
             'ㄉㄡ': { 1: '兜', 3: '斗', 4: '豆' },
             'ㄉㄢ': { 1: '單', 3: '膽', 4: '蛋' },
             'ㄉㄥ': { 1: '登', 3: '等', 4: '鄧' },
@@ -308,7 +314,7 @@
             'ㄉㄨㄛ': { 1: '多', 2: '奪', 3: '朵', 4: '墮' },
             'ㄉㄨㄟ': { 1: '堆', 4: '對' },
             'ㄉㄨㄢ': { 1: '端', 3: '短', 4: '斷' },
-            'ㄉㄨㄣ': { 1: '敦', 3: '躉', 4: '頓' }, 
+            'ㄉㄨㄣ': { 1: '敦', 3: '躉', 4: '頓' },
             'ㄉㄨㄥ': { 1: '東', 3: '懂', 4: '動' },
             'ㄊㄚ': { 1: '他', 3: '塔', 4: '踏' },
             'ㄊㄜ': { 4: '特' },
@@ -332,7 +338,7 @@
             'ㄋㄚ': { 2: '拿', 3: '哪', 4: '那' },
             'ㄋㄞ': { 3: '乃', 4: '奈' },
             'ㄋㄟ': { 3: '餒', 4: '內' },
-            'ㄋㄠ': { 1: '孬', 2: '撓', 3: '腦', 4: '鬧' }, 
+            'ㄋㄠ': { 1: '孬', 2: '撓', 3: '腦', 4: '鬧' },
             'ㄋㄢ': { 2: '南', 3: '赧', 4: '難' },
             'ㄋㄣ': { 4: '嫩' },
             'ㄋㄤ': { 2: '囊', 3: '攮' },
@@ -356,10 +362,10 @@
             'ㄌㄠ': { 1: '撈', 2: '勞', 3: '老', 4: '烙' },
             'ㄌㄡ': { 2: '樓', 3: '摟', 4: '漏' },
             'ㄌㄢ': { 2: '藍', 3: '懶', 4: '爛' },
-            'ㄌㄤ': { 2: '郎', 3: '朗', 4: '浪' },
+            'ㄌㄤ': { 1: '郎', 2: '郎', 3: '朗', 4: '浪' },
             'ㄌㄥ': { 3: '冷', 4: '愣' },
             'ㄌㄧ': { 2: '離', 3: '理', 4: '力' },
-            'ㄌㄧㄝ': { 3: '咧', 4: '烈' }, 
+            'ㄌㄧㄝ': { 1: '巤', 3: '咧', 4: '烈' }, 
             'ㄌㄧㄠ': { 1: '撩', 2: '聊', 3: '了', 4: '料' }, 
             'ㄌㄧㄡ': { 1: '溜', 2: '留', 3: '柳', 4: '六' },
             'ㄌㄧㄢ': { 2: '連', 3: '臉', 4: '練' },
@@ -380,7 +386,7 @@
             'ㄍㄠ': { 1: '高', 3: '搞', 4: '告' },
             'ㄍㄡ': { 1: '溝', 3: '狗', 4: '夠' },
             'ㄍㄢ': { 1: '乾', 3: '敢', 4: '幹' },
-            'ㄍㄣ': { 1: '跟', 4: '亙' }, 
+            'ㄍㄣ': { 1: '跟', 3: '艮', 4: '亙' }, 
             'ㄍㄤ': { 1: '剛', 3: '崗', 4: '鋼' },
             'ㄍㄥ': { 1: '更', 3: '梗', 4: '更' },
             'ㄍㄨ': { 1: '姑', 3: '古', 4: '顧' },
@@ -398,7 +404,7 @@
             'ㄎㄠ': { 1: '尻', 3: '考', 4: '靠' }, 
             'ㄎㄡ': { 1: '摳', 3: '口', 4: '寇' },
             'ㄎㄢ': { 1: '刊', 3: '砍', 4: '看' },
-            'ㄎㄣ': { 3: '肯', 4: '掯' }, 
+            'ㄎㄣ': { 3: '肯', 4: '硍' }, 
             'ㄎㄤ': { 1: '康', 2: '扛', 4: '炕' },
             'ㄎㄥ': { 1: '坑' },
             'ㄎㄨ': { 1: '哭', 3: '苦', 4: '庫' },
@@ -410,7 +416,7 @@
             'ㄎㄨㄣ': { 1: '昆', 3: '捆', 4: '困' },
             'ㄎㄨㄤ': { 1: '匡', 2: '狂', 4: '況' },
             'ㄎㄨㄥ': { 1: '空', 3: '孔', 4: '控' },
-            'ㄏㄚ': { 1: '哈' },
+            'ㄏㄚ': { 1: '哈', 2: '哈' }, 
             'ㄏㄜ': { 1: '喝', 2: '河', 4: '賀' },
             'ㄏㄞ': { 1: '嗨', 2: '孩', 3: '海', 4: '害' }, 
             'ㄏㄟ': { 1: '黑', 4: '嘿' }, 
@@ -427,7 +433,7 @@
             'ㄏㄨㄟ': { 1: '輝', 2: '回', 3: '毀', 4: '會' },
             'ㄏㄨㄢ': { 1: '歡', 2: '環', 3: '緩', 4: '換' },
             'ㄏㄨㄣ': { 1: '婚', 2: '魂', 4: '混' },
-            'ㄏㄨㄤ': { 1: '荒', 2: '黃', 3: '謊', 4: '晃' },
+            'ㄏㄨㄤ': { 1: '荒', 2: '黃', 3: '幌', 4: '晃' },
             'ㄏㄨㄥ': { 1: '烘', 2: '紅', 3: '哄', 4: '鬨' }, 
             'ㄐㄧ': { 1: '雞', 2: '集', 3: '擠', 4: '寄' },
             'ㄐㄧㄚ': { 1: '家', 2: '夾', 3: '甲', 4: '價' },
@@ -493,7 +499,7 @@
             'ㄓㄨㄥ': { 1: '中', 3: '塚', 4: '重' },
             'ㄔ': { 1: '吃', 2: '遲', 3: '尺', 4: '翅' },
             'ㄔㄚ': { 1: '插', 2: '查', 3: '姹', 4: '岔' },
-            'ㄔㄞ': { 1: '拆', 2: '柴', 4: '蠆' }, 
+            'ㄔㄞ': { 1: '拆', 2: '柴', 3: '笧', 4: '蠆' }, 
             'ㄔㄠ': { 1: '超', 2: '巢', 3: '炒', 4: '吵' },
             'ㄔㄡ': { 1: '抽', 2: '愁', 3: '醜', 4: '臭' },
             'ㄔㄢ': { 1: '攙', 2: '纏', 3: '產', 4: '懺' },
@@ -511,7 +517,7 @@
             'ㄕ': { 1: '師', 2: '十', 3: '使', 4: '是' },
             'ㄕㄚ': { 1: '殺', 2: '啥', 3: '傻', 4: '煞' },
             'ㄕㄜ': { 1: '奢', 2: '蛇', 3: '捨', 4: '社' },
-            'ㄕㄞ': { 1: '篩', 3: '繺', 4: '曬' }, 
+            'ㄕㄞ': { 1: '篩', 3: '骰', 4: '曬' }, 
             'ㄕㄟ': { 2: '誰' },
             'ㄕㄠ': { 1: '燒', 2: '勺', 3: '少', 4: '哨' },
             'ㄕㄡ': { 1: '收', 2: '熟', 3: '手', 4: '受' },
@@ -614,9 +620,9 @@
             'ㄩㄣ': { 1: '暈', 2: '雲', 3: '允', 4: '運' },
             'ㄩㄥ': { 1: '雍', 3: '勇', 4: '用' },
             'ㄞ':   { 1: '哀', 2: '癌', 3: '矮', 4: '愛' },
-            'ㄟ':   { 2: '欸', 4: '誒' }, 
+            'ㄟ':   { 1: '誒', 4: '欸' }, 
             'ㄠ':   { 1: '凹', 2: '熬', 3: '襖', 4: '奧' },
-            'ㄡ':   { 1: '歐', 3: '偶', 4: '漚' },
+            'ㄡ':   { 1: '歐', 2: '偶', 3: '漚' },
             'ㄢ':   { 1: '安', 3: '俺', 4: '案' },
             'ㄣ':   { 1: '恩', 4: '摁' },
             'ㄤ':   { 1: '骯', 2: '昂' },
@@ -624,8 +630,8 @@
             'ㄦ':   { 2: '兒', 3: '耳', 4: '二' },
             'ㄚ':   { 1: '阿' },
             'ㄛ':   { 1: '喔' },
-            'ㄜ':   { 1: '婀', 2: '額', 3: '噁', 4: '餓' },
-        
+            'ㄜ':   { 1: '婀', 2: '鵝', 3: '噁', 4: '餓' },
+            'ㄝ':   { 1: '誒' }
         };
 
         const REVERSE_DICT = {};
@@ -672,7 +678,7 @@
                          const duration = Math.max(1.5, (text.length * 1.1 / rate) * repeat);
                          const sr = this.audioCtx.sampleRate;
                          resolve(this.audioCtx.createBuffer(1, Math.floor(sr * duration), sr));
-                    }, 350); 
+                    }, 450); 
                 });
             }
         }
@@ -693,6 +699,12 @@
                 this.targetTone = null;
                 this.currentQuizChar = ""; 
                 this.currentQuizText = ""; 
+
+                // 暫存資料保留區，供重播功能使用
+                this.lastCorrectTone = null; 
+                this.lastCorrectChar = ""; 
+                this.lastCorrectText = ""; 
+
                 this.loop = this.loop.bind(this);
                 requestAnimationFrame(this.loop);
                 this.resize();
@@ -722,11 +734,12 @@
                 }
             }
 
-            async playTone(tone, forceAnimation = false, customRate = 0.5) {
+            async playTone(tone, forceAnimation = false, customRate = 0.5) { // ⬅️ 改這裡：自由演示語速 (原本 0.6 改為 0.5)
                 if (this.quizMode && !forceAnimation) return;
                 if (this.manager.audioCtx.state === 'suspended') await this.manager.audioCtx.resume();
-                let input = document.getElementById('user-text-input').value.trim();
-                if (forceAnimation && this.currentQuizText) input = this.currentQuizText; 
+                
+                let input = forceAnimation ? (this.currentQuizText || this.lastCorrectText) : document.getElementById('user-text-input').value.trim();
+                
                 if (!forceAnimation) this.setLoading(true, "準備中...", false);
                 try {
                     const result = await this.manager.getAudio(input, tone, customRate);
@@ -866,7 +879,7 @@
                     if (!dictEntry[this.targetTone]) { this.playQuizSound(); return; }
                     const text = dictEntry[this.targetTone]; 
                     this.currentQuizChar = text; 
-                    await this.manager.browserTTS(text, 0.35, 2); 
+                    await this.manager.browserTTS(text, 0.35, 2); // ⬅️ 改這裡：練習出題語速 (原本 0.45 改為 0.35)
                     this.setLoading(false, "請聽題！", true);
                     document.getElementById('quiz-step-2').style.display = 'block';
                     document.getElementById('feedback').innerText = "";
@@ -876,15 +889,24 @@
             async replayQuizSound() {
                 if (!this.currentQuizChar) return;
                 this.setLoading(true, "再次播放...", true);
-                await this.manager.browserTTS(this.currentQuizChar, 0.35, 2); 
+                await this.manager.browserTTS(this.currentQuizChar, 0.35, 2); // ⬅️ 改這裡：練習再聽一遍語速 (原本 0.45 改為 0.35)
                 this.setLoading(false, "請選擇答案", true);
             }
 
+            // 重播演示方法
+            async replaySuccess() {
+                if (!this.lastCorrectTone) return;
+                this.playTone(this.lastCorrectTone, true, 0.5); // ⬅️ 改這裡：答對重播演示速度
+            }
+
             checkAnswer(ans) {
-                               if (ans === this.targetTone) {
+                if (!this.targetTone) return;
+                const fb = document.getElementById('feedback');
+                const quizArea = document.getElementById('quiz-area');
+                if (ans === this.targetTone) {
                     const symbol = this.getToneSymbol(this.targetTone);
                     
-                    // 【關鍵】將目前的題目資料存起來，不要立刻清空
+                    // 保存演示用的資料，供重播按鈕使用
                     this.lastCorrectTone = this.targetTone;
                     this.lastCorrectChar = this.currentQuizChar;
                     this.lastCorrectText = this.currentQuizText;
@@ -894,12 +916,10 @@
                         <button class="replay-success-btn" onclick="app.replaySuccess()">🔄 重播演示</button>
                     `;
                     
-                    this.playTone(this.targetTone, true, 0.5); // 答對後的自動演示
+                    this.playTone(this.targetTone, true, 0.5); // ⬅️ 改這裡：答對自動演示語速 (原本 0.6 改為 0.5)
                     this.targetTone = null;
                     document.getElementById('quiz-step-2').style.display = 'none';
-                }
-
- else {
+                } else {
                     fb.innerHTML = `<span style="color:var(--wrong-color)">🤔 不對喔，請再聽一次！</span>`;
                     quizArea.classList.remove('shake');
                     void quizArea.offsetWidth;
