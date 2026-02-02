@@ -405,7 +405,7 @@
             'ㄎㄨㄣ': { 1: '昆', 3: '捆', 4: '困' },
             'ㄎㄨㄤ': { 1: '匡', 2: '狂', 4: '況' },
             'ㄎㄨㄥ': { 1: '空', 3: '孔', 4: '控' },
-            'ㄏㄚ': { 1: '哈', 2: '蛤' },
+            'ㄏㄚ': { 1: '哈' },
             'ㄏㄜ': { 1: '喝', 2: '河', 4: '賀' },
             'ㄏㄞ': { 1: '嗨', 2: '孩', 3: '海', 4: '害' }, 
             'ㄏㄟ': { 1: '黑', 4: '嘿' }, 
@@ -619,7 +619,7 @@
             'ㄦ':   { 2: '兒', 3: '耳', 4: '二' },
             'ㄚ':   { 1: '阿' },
             'ㄛ':   { 1: '喔' },
-            'ㄜ':   { 1: '婀', 2: '鵝', 3: '噁', 4: '餓' },
+            'ㄜ':   { 1: '婀', 2: '額', 3: '噁', 4: '餓' },
         
         };
 
@@ -717,7 +717,7 @@
                 }
             }
 
-            async playTone(tone, forceAnimation = false, customRate = 0.6) {
+            async playTone(tone, forceAnimation = false, customRate = 0.5) {
                 if (this.quizMode && !forceAnimation) return;
                 if (this.manager.audioCtx.state === 'suspended') await this.manager.audioCtx.resume();
                 let input = document.getElementById('user-text-input').value.trim();
@@ -861,7 +861,7 @@
                     if (!dictEntry[this.targetTone]) { this.playQuizSound(); return; }
                     const text = dictEntry[this.targetTone]; 
                     this.currentQuizChar = text; 
-                    await this.manager.browserTTS(text, 0.45, 2); 
+                    await this.manager.browserTTS(text, 0.35, 2); 
                     this.setLoading(false, "請聽題！", true);
                     document.getElementById('quiz-step-2').style.display = 'block';
                     document.getElementById('feedback').innerText = "";
@@ -871,21 +871,30 @@
             async replayQuizSound() {
                 if (!this.currentQuizChar) return;
                 this.setLoading(true, "再次播放...", true);
-                await this.manager.browserTTS(this.currentQuizChar, 0.45, 2); 
+                await this.manager.browserTTS(this.currentQuizChar, 0.35, 2); 
                 this.setLoading(false, "請選擇答案", true);
             }
 
             checkAnswer(ans) {
-                if (!this.targetTone) return;
-                const fb = document.getElementById('feedback');
-                const quizArea = document.getElementById('quiz-area');
-                if (ans === this.targetTone) {
+                               if (ans === this.targetTone) {
                     const symbol = this.getToneSymbol(this.targetTone);
-                    fb.innerHTML = `<span style="color:var(--correct-color)">🎉 答對了！這是「${this.currentQuizChar}」(${this.currentQuizText}${symbol})</span>`;
-                    this.playTone(this.targetTone, true, 0.6); 
+                    
+                    // 【關鍵】將目前的題目資料存起來，不要立刻清空
+                    this.lastCorrectTone = this.targetTone;
+                    this.lastCorrectChar = this.currentQuizChar;
+                    this.lastCorrectText = this.currentQuizText;
+
+                    fb.innerHTML = `
+                        <span style="color:var(--correct-color)">🎉 答對了！這是「${this.currentQuizChar}」(${this.currentQuizText}${symbol})</span>
+                        <button class="replay-success-btn" onclick="app.replaySuccess()">🔄 重播演示</button>
+                    `;
+                    
+                    this.playTone(this.targetTone, true, 0.5); // 答對後的自動演示
                     this.targetTone = null;
                     document.getElementById('quiz-step-2').style.display = 'none';
-                } else {
+                }
+
+ else {
                     fb.innerHTML = `<span style="color:var(--wrong-color)">🤔 不對喔，請再聽一次！</span>`;
                     quizArea.classList.remove('shake');
                     void quizArea.offsetWidth;
